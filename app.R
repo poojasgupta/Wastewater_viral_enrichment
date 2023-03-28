@@ -13,7 +13,8 @@ ui <- fluidPage(
   titlePanel("Wastewater Viral Enrichment Dashboard"),
   sidebarLayout(
     sidebarPanel(
-      fileInput("input_file", "Upload CSV", accept = c(".csv"))
+      fileInput("input_file", "Upload CSV", accept = c(".csv")),
+      dateInput("date_selection", "Select Collection Date", value = Sys.Date())
     ),
     mainPanel(
       plotOutput("heatmap")
@@ -36,9 +37,9 @@ server <- function(input, output) {
     mdf <- data()
 
      # Filter the data based on the selected date
-    #mdf_filtered <- mdf[mdf$Collection_date == as.character(input$date_selection),]
+    mdf_filtered <- mdf[mdf$Collection_date == as.character(input$date_selection),]
 
-    ggplot(mdf, aes(x = Virus, y = SampleID, fill = log10(Median_coverage))) +
+    ggplot(mdf_filtered, aes(x = Virus, y = SampleID, fill = log10(Median_coverage))) +
       geom_tile() +
       xlab(label = "Virus") +
       labs(x = "Virus", y="Wastewater site") +
